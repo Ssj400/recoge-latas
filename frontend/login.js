@@ -1,0 +1,28 @@
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const nickname = document.getElementById("nickname").value;
+    const password = document.getElementById("password").value;
+    console.log(nickname, password);
+
+
+    try {
+        const res = await fetch("http://localhost:3000/login", {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-type": "application/json" },
+            body: JSON.stringify({ nickname, password })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+            localStorage.setItem("token", data.token);
+            window.location.href = "profile.html"
+        } else {
+            document.getElementById("errorMsg").textContent = data.error;
+        }
+    } catch (error) {
+        console.error("Error:", error)
+    }
+});

@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./style.css">
-    <script src="script.js" defer></script>
-    <title>Recoge latas</title>
+    <script src="login.js" defer></script>    
+    <title>Iniciar Sesión</title>
 </head>
 <body>
-    <header>
-        <h1 class="total">0</h1>
-        <h2 class="percent">0%</h2>
-    </header>
-    <main>
-       <input type="number" class="adder" placeholder="Nuevas latas">
-       <button class="sum">Agregar</button>
-    </main>
+    <h2>Iniciar Sesión</h2>
+    <form id="loginForm">
+        <input type="text" id="nickname" placeholder="Nickname" required>
+        <input type="text" id="password" placeholder="Contraseña" required>
+        <button type="submit">Ingresar</button>
+    </form>
+    <p id="errorMsg"></p>
+    <p>¿No tienes una cuenta? <a href="./register.html">Regístrate</a></p>
 </body>
 </html>
