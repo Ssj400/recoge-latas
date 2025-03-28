@@ -57,7 +57,7 @@ async function getProfile() {
         const data = await res.json();
 
         if (res.ok) {
-            document.getElementById("userInfo").textContent = `Hola, ${data.nickname}. Has recolectado ${data.total_cans} latas.`;
+            document.getElementById("userInfo").textContent = `Hola ${data.nickname}, has recolectado ${data.total_cans} latas. (${((data.total_cans * 100) / 60000).toFixed(4)}%)`;
         } else {
             logOut();
             window.location.href = "index.html"; 
@@ -81,7 +81,35 @@ async function logOut () {
     window.location.href = "index.html";
 }
 
-document.addEventListener("DOMContentLoaded", getProfile);
+async function loadRanking() {
+    try {
+        const res = await fetch("http://localhost:3000/ranking", {
+            method: "GET",
+            credentials: "include",
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+            const rankingContainer = document.getElementById("ranking");
+            rankingContainer.innerHTML = ""; 
+
+            data.forEach((user, index) => {
+                const listItem = document.createElement("li");
+                listItem.textContent = `${index + 1}. ${user.name} (${user.nickname}) - ${user.total_cans} latas`;
+                rankingContainer.appendChild(listItem);
+            });
+        } else {
+            console.error("Error al cargar el ranking");
+        }
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    getProfile();
+    loadRanking();
+});
 
 
 document.getElementById("logout").addEventListener("click", logOut)

@@ -147,7 +147,17 @@ app.get("/total", async (req, res) => {
     
 });
 
+app.get("/ranking", async (req, res) => {
+    try {
+        const client = await pool.connect();
+        const ranking = await client.query("SELECT name, nickname, total_cans FROM users ORDER BY total_cans DESC LIMIT 10");
+        client.release();
 
+        res.status(200).json(ranking.rows);
+    } catch (error) {
+        req.status(500).json({ error: "Error obteniendo el ranking" });
+    }
+})
 
 app.post("/sum", authMiddleware, async (req, res) => {
     try {
