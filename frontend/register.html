@@ -13,9 +13,11 @@
         <h2><svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-coffee" href="#icon-coffee" /></svg>Regístrate</h2>
         <label class="input">
-          <input class="input__field" type="text" id="name" placeholder="Nombre real" required>
-          <input class="input__field" type="text" id="nickname" placeholder="Nickname"/>
-          <input class="input__field" type="text" id="password" placeholder="Contraseña"/>
+          <select class="input__field" id="name" required>
+            <option value="" disabled selected>Seleccione su nombre</option>
+          </select>
+          <input class="input__field" type="text" autocomplete="off"  id="nickname" placeholder="Nickname"/>
+          <input class="input__field" type="password"  autocomplete="new-password" id="password" placeholder="Contraseña"/>
         </label>
         <div class="button-group">
           <button type="submit">Send</button>

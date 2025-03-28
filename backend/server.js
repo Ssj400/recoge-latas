@@ -26,22 +26,33 @@ app.post("/register", async (req, res) => {
         if (!name || !nickname || !password) return res.status(400).json({ error: "Faltan datos" });
 
         const client = await pool.connect();
-        const userExists = await pool.query("SELECT * FROM USERS WHERE nickname = $1", [nickname]);
+        const userExists = await pool.query("SELECT * FROM users WHERE nickname = $1", [nickname]);
         
         if (userExists.rows.length > 0) {
             client.release();
             return res.status(400).json({ error: "El nickname ya está en uso"});
         }
        
+        const availableUser = await pool.query("SELECT * FROM users WHERE name = $1 AND nickname IS NULL", [name]);
+        if (availableUser.rows.length === 0) {
+            client.release();
+            return res.status(400).json({
+                error: "El nombre ya fue usado o no existe"
+            })
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10);
+
+
     
-        const newUser = await pool.query("INSERT INTO users (name, nickname, password) VALUES ($1, $2, $3) RETURNING *", [name, nickname, hashedPassword]);
+        const updatedUser = await pool.query("UPDATE users SET nickname = $1, password = $2 WHERE id = $3 RETURNING *", [nickname, hashedPassword, availableUser.rows[0].id]);
+
         await pool.query("COMMIT");
-        console.log("Nuevo usuario registrado:", newUser.rows[0]);
+        console.log("Nuevo usuario registrado:", updatedUser.rows[0]);
         
         const token = jwt.sign(
-            { id: newUser.rows[0].id, nickname: newUser.rows[0].nickname },
-           process.env.JWT_SECRET,
+            { id: updatedUser.rows[0].id, nickname: updatedUser.rows[0].nickname },
+            process.env.JWT_SECRET,
             {expiresIn: "24h"}
         )
 
@@ -53,7 +64,7 @@ app.post("/register", async (req, res) => {
         })
 
 
-        res.status(201).json({ message: "Usuario registrado exitosamente", user: newUser.rows[0]});
+        res.status(201).json({ message: "Usuario registrado exitosamente", user: updatedUser.rows[0]});
         client.release();
     } catch (error) {
         console.error(error);
@@ -100,6 +111,20 @@ app.post("/login", async (req, res) => {
     
 });
 
+app.get("/available-names", async (req, res) => {
+    try {
+        const client = await pool.connect();
+        const result = await pool.query("SELECT name FROM users WHERE nickname IS NULL");
+
+        client.release();
+
+        res.json(result.rows.map(row => row.name));
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error obteniendo nombres disponibles" })
+    }
+})
+
 app.get("/profile", authMiddleware, async (req, res) => {
     try {
         const result = await pool.query("SELECT * FROM users WHERE id = $1", [req.user.userId]);
@@ -126,10 +151,11 @@ app.get("/total", async (req, res) => {
 
 app.post("/sum", authMiddleware, async (req, res) => {
     try {
-        console.log("📥 Datos recibidos:", req.body);
+        const userId = req.user.userId;
+        console.log("📥 Datos recibidos:", req.body, "userId:", userId);
         const { amount } = req.body;
     
-        const userId = req.user.userId;
+        
 
         
         if (!userId || !amount || amount <= 0) {

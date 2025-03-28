@@ -59,7 +59,7 @@ async function getProfile() {
         if (res.ok) {
             document.getElementById("userInfo").textContent = `Hola, ${data.nickname}. Has recolectado ${data.total_cans} latas.`;
         } else {
-            localStorage.removeItem("token"); 
+            logOut();
             window.location.href = "index.html"; 
         }
     } catch (error) {

@@ -17,7 +17,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
 
         if (res.ok) {
             localStorage.setItem("token", data.token);
-            window.location.href = "profile.html"
+            window.location.replace("profile.html");
         } else {
             document.getElementById("errorMsg").textContent = data.error;
         }
