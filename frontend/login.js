@@ -3,8 +3,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
 
     const nickname = document.getElementById("nickname").value;
     const password = document.getElementById("password").value;
-    console.log(nickname, password);
-
+    
 
     try {
         const res = await fetch("http://localhost:3000/login", {
@@ -26,3 +25,4 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
         console.error("Error:", error)
     }
 });
+

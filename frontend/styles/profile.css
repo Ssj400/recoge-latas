@@ -1,0 +1,122 @@
+body {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    background-color: #a3a3a3;
+}
+
+header {
+    background-color: #212121;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0px;
+    height: 60vh;
+}
+
+header h1 {
+    font-size: 750%;
+    color: white;
+    margin-top: 3%;
+    margin-bottom: 0;
+}
+
+header h2 {
+    color: #fab700;
+    margin-top: 1%;
+    font-size: 300%;
+}
+
+main {
+   display: flex; 
+   justify-content: center;
+   align-items: center;
+   margin-top: 1.3vh;
+   margin-bottom: 1vh;
+   gap: .2vw;
+}
+
+
+
+.button-25 {
+  background-color: #fab700;
+  background-image: linear-gradient(#fab700, #c18e02);
+  border: 1px solid #77872a;
+  border-radius: 4px;
+  box-shadow: rgba(0, 0, 0, 0.) 0 1px 1px;
+  color: #FFFFFF;
+  cursor: pointer;
+  font-family: -apple-system,".SFNSDisplay-Regular","Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 17px;
+  line-height: 100%;
+  margin: 0;
+  outline: 0;
+  padding: 11px 15px 12px;
+  text-align: center;
+  transition: box-shadow .05s ease-in-out,opacity .05s ease-in-out;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  height: 5vh;
+}
+
+.button-25:hover {
+  box-shadow: rgba(255, 255, 255, 0.3) 0 0 2px inset, rgba(0, 0, 0, 0.4) 0 1px 2px;
+  text-decoration: none;
+  transition-duration: .15s, .15s;
+}
+
+.button-25:active {
+  box-shadow: rgba(0, 0, 0, 0.15) 0 2px 4px inset, rgba(0, 0, 0, 0.4) 0 1px 1px;
+}
+
+.button-25:disabled {
+  cursor: not-allowed;
+  opacity: .6;
+}
+
+.button-25:disabled:active {
+  pointer-events: none;
+}
+
+.button-25:disabled:hover {
+  box-shadow: none;
+}
+
+.adder {
+    height: 5vh;
+    border: none;
+    border-radius: 4px;
+    outline: none;
+    line-height: 100%;
+    font-size: 17px;
+    box-sizing: border-box;
+}
+
+.adder:focus {
+    border: 1px solid black;
+}
+
+.profile {
+    height: 20vh;
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+}
+
+#logout {
+    align-self: flex-end;
+    font-size: 3vh;
+    margin-top: auto;
+    background-color: rgb(215, 37, 37);
+    color: rgb(217, 217, 217);
+    border-radius: 4px;
+    
+}
+
+#logout:hover {	
+  background-color: rgb(241, 42, 42);
+  cursor: pointer;
+}

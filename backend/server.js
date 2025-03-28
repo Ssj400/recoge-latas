@@ -17,12 +17,12 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-const SECRET_KEY = process.env.JWT_SECRET
+
 
 app.post("/register", async (req, res) => {
     try {
         const { name, nickname, password } = req.body;
-        console.log(name, nickname, password);
+        
         if (!name || !nickname || !password) return res.status(400).json({ error: "Faltan datos" });
 
         const client = await pool.connect();
@@ -36,22 +36,25 @@ app.post("/register", async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
     
         const newUser = await pool.query("INSERT INTO users (name, nickname, password) VALUES ($1, $2, $3) RETURNING *", [name, nickname, hashedPassword]);
-
-
+        await pool.query("COMMIT");
+        console.log("Nuevo usuario registrado:", newUser.rows[0]);
+        
         const token = jwt.sign(
             { id: newUser.rows[0].id, nickname: newUser.rows[0].nickname },
-            SECRET_KEY,
-            {expiresIn: "1h"}
+           process.env.JWT_SECRET,
+            {expiresIn: "24h"}
         )
 
         res.cookie("token", token, {
             httpOnly: true,
             secure: false,
-            maxAge: 60 * 60 * 10
+            maxAge: 24 * 60 * 60 * 1000,
+            sameSite: "Lax"
         })
 
-        client.release();
+
         res.status(201).json({ message: "Usuario registrado exitosamente", user: newUser.rows[0]});
+        client.release();
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Error registrando usuario" });
@@ -79,12 +82,12 @@ app.post("/login", async (req, res) => {
             return res.status(401).json({ error: "Contraseña incorrecta" });
         }
 
-        const token = jwt.sign({ userId: user.id, nickname: user.nickname}, process.env.JWT_SECRET, { expiresIn: "1h" })
+        const token = jwt.sign({ userId: user.id, nickname: user.nickname}, process.env.JWT_SECRET, { expiresIn: "24h" })
         
         res.cookie("token", token, {
             httpOnly: true,
             secure: false,
-            maxAge: 60 * 60 * 10,
+            maxAge: 24 * 60 * 60 * 1000,
             sameSite: "Lax"
         });
 
@@ -102,6 +105,7 @@ app.get("/profile", authMiddleware, async (req, res) => {
         const result = await pool.query("SELECT * FROM users WHERE id = $1", [req.user.userId]);
         res.json(result.rows[0]);
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: "Error obteniendo el perfil" });
     }
     

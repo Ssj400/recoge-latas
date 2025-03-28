@@ -15,7 +15,7 @@ async function registerUser() {
     const data = await response.json();
     if (response.ok) {
         alert(`Registro exitoso`);
-        window.location.href = "profile.html";
+        window.location.href = "index.html";
     } else {
         alert(`Error ${data.error}`);
     }
