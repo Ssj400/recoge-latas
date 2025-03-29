@@ -36,8 +36,10 @@ async function addLata() {
         }
         adder.value = "";
         alert("Latas enviadas");
+
         await getTotal();
         await getProfile();
+        await getRanking();
     } catch (error) {
         console.error("Error:", error);
     }
@@ -81,7 +83,7 @@ async function logOut () {
     window.location.href = "index.html";
 }
 
-async function loadRanking() {
+async function getRanking() {
     try {
         const res = await fetch("http://localhost:3000/ranking", {
             method: "GET",
@@ -108,12 +110,16 @@ async function loadRanking() {
 
 document.addEventListener("DOMContentLoaded", () => {
     getProfile();
-    loadRanking();
+    getRanking();
+    getTotal(); 
 });
 
 
 document.getElementById("logout").addEventListener("click", logOut)
 
-sum.addEventListener("click", addLata);
+sum.addEventListener("click", async () => {
+    addLata();
+});
 
-getTotal(); 
+
+

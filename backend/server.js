@@ -123,7 +123,7 @@ app.get("/available-names", async (req, res) => {
         console.error(error);
         res.status(500).json({ error: "Error obteniendo nombres disponibles" })
     }
-})
+});
 
 app.get("/profile", authMiddleware, async (req, res) => {
     try {
@@ -147,6 +147,25 @@ app.get("/total", async (req, res) => {
     
 });
 
+
+app.get("/logs", async (req, res) => {
+    try {
+        const client = await pool.connect();
+        const logs = await client.query(`
+            SELECT users.nickname, logs.action, logs.timestamp
+            FROM logs
+            JOIN users ON logs.user_id = users.id
+            ORDER BY logs.timestamp DESC
+            `);
+        client.release();
+
+        res.status(200).json(logs.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error obteniendo logs" });
+    }
+});
+
 app.get("/ranking", async (req, res) => {
     try {
         const client = await pool.connect();
@@ -157,7 +176,7 @@ app.get("/ranking", async (req, res) => {
     } catch (error) {
         req.status(500).json({ error: "Error obteniendo el ranking" });
     }
-})
+});
 
 app.post("/sum", authMiddleware, async (req, res) => {
     try {
@@ -176,6 +195,8 @@ app.post("/sum", authMiddleware, async (req, res) => {
 
         await pool.query("UPDATE users SET total_cans = total_cans + $1 WHERE id = $2", [ amount, userId ]);
 
+        await pool.query("INSERT INTO logs (user_id, action) VALUES ($1, $2)",  [userId, `Sumó ${amount} latas`]);
+        
 
         console.log("✅ POST exitoso, enviando respuesta...");
         return res.status(200).json({message: "POST exitoso"});
