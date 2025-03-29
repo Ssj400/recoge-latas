@@ -3,22 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="login.js" defer></script> 
-    <link rel="stylesheet" href="./styles/login.css">   
-    <title>Iniciar Sesión</title>
+    <script  type="module" src="../js/register.js" defer></script>
+    <link rel="stylesheet" href="./styles/login.css">    
+    <title>Regístrate</title>
 </head>
 <body>
-    
-    
-    
 
-
-    <form class="card" id="loginForm">
+    <form class="card" id="registerForm">
         <h2><svg class="icon" aria-hidden="true">
-          <use xlink:href="#icon-coffee" href="#icon-coffee" /></svg>Iniciar Sesión</h2>
+          <use xlink:href="#icon-coffee" href="#icon-coffee" /></svg>Regístrate</h2>
         <label class="input">
-          <input class="input__field" type="text" autocomplete="off" id="nickname" placeholder="Nickname"/>
-          <input class="input__field" type="password" autocomplete="new-password" id="password" placeholder="Contraseña"/>
+          <select class="input__field" id="name" required>
+            <option value="" disabled selected>Seleccione su nombre</option>
+          </select>
+          <input class="input__field" type="text" autocomplete="off"  id="nickname" placeholder="Nickname"/>
+          <input class="input__field" type="password"  autocomplete="new-password" id="password" placeholder="Contraseña"/>
         </label>
         <div class="button-group">
           <button type="submit">Send</button>
@@ -27,7 +26,7 @@
     </form>
 
     <p id="errorMsg"></p>
-    <p>¿No tienes una cuenta? <a href="./register.html">Regístrate</a></p>
+    <p>¿Ya estás registrado? <a href="./index.html">Iniciar Sesión</a></p>
 
        
        
@@ -42,5 +41,6 @@
         <path fill="var(--color-accent)" d="M11.07,5.42a5.45,5.45,0,0,1,0-4.85,1,1,0,0,1,1.79.89,3.44,3.44,0,0,0,0,3.06,1,1,0,1,1-1.79.89Z"/>
       </symbol>
     </svg>
+    <p id="errorMsg"></p>
 </body>
 </html>
