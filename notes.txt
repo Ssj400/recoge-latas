@@ -1,6 +1,0 @@
-VER LOGS: 
-
-SELECT users.nickname, logs.action, logs.timestamp 
-FROM logs 
-JOIN users ON logs.user_id = users.id 
-ORDER BY logs.timestamp DESC;
