@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     let total = document.querySelector(".total");
     let percentage = document.querySelector(".percent");
     let logOutButton = document.querySelector("#logout");
+    let nickname = "";
+    let firstPlace = false;
 
     async function updateProfile() {
         const data = await getProfile();
@@ -16,9 +18,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         if (data.last === true) {
-            document.getElementById("lastPlace").textContent = "Eres el último en la lista, ¡anímate a recolectar más latas!";
+            document.getElementById("placeMsg").textContent = "Eres el último en la lista, ¡anímate a recolectar más latas!";
         }
-        document.getElementById("userInfo").textContent = `Hola ${data.nickname}, has recolectado ${data.total_cans} latas. (${((data.total_cans * 100) / 60000).toFixed(4)}%)`;
+        nickname = data.nickname;
+        document.getElementById("userInfo").textContent = `Hola ${data.nickname}, has recolectado ${data.total_cans} latas. (${((data.total_cans * 100) / 2000).toFixed(4)}% de lo que se espera de ti)`;
     }
 
 
@@ -31,6 +34,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         } else {
             alert("Error al obtener el total");
         }   
+    }
+
+
+    function launchConfetti() {
+        confetti({
+            particleCount: 200,
+            spread: 120,
+            origin: { y: 0.6 }
+        });
     }
 
     async function updateRanking() { 
@@ -53,6 +65,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 } 
                 rankingContainer.appendChild(listItem);
             });
+
+            if (nickname === ranking[0].nickname) {
+                firstPlace = true;
+            }
         } else {
             alert("Error al cargar el ranking");
         }
@@ -86,9 +102,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
     logOutButton.addEventListener("click", logOut);
 
+
     await updateTotal();
     await updateProfile();
-    await updateRanking();
+    await updateRanking(); 
+
+    if (firstPlace) {
+        launchConfetti();
+        document.getElementById("placeMsg").textContent = "!Felicidades, eres el primero en la lista!";
+        document.getElementById("placeMsg").style.color = "gold";
+    }
 });
 
 
