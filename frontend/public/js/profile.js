@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (firstPlace) {
         launchConfetti();
-        document.getElementById("placeMsg").textContent = "!Felicidades, eres el primero en la lista!";
+        document.getElementById("placeMsg").textContent = "¡Felicidades, eres el primero en la lista!";
         document.getElementById("placeMsg").style.color = "gold";
     }
 });
