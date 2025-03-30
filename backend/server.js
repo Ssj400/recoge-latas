@@ -20,6 +20,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/collects", collectRoutes);
 app.use("/api/logs", logRoutes);
+app.use("/api/monitor", require("./routes/monitorRoutes"));
 
 
 app.listen(3000, () => {
