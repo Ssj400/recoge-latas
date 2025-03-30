@@ -1,19 +1,25 @@
 import { registerUser,  getAvailableNames } from "./api.js";
 
-async function handleRegister(e) {
-    e.preventDefault();
+async function handleRegister() {
 
     const name = document.getElementById("name").value;
     const nickname = document.getElementById("nickname").value;
     const password = document.getElementById("password").value;
 
+    if (!name || !nickname || !password) {
+        document.getElementById("errorMsg").textContent = "Por favor complete todos los campos";
+        return;
+    } else if (password.length < 6) {
+        document.getElementById("errorMsg").textContent = "La contraseña debe tener al menos 6 caracteres";
+        return;
+    }
     try {
         await registerUser(name, nickname, password);
         alert("Usuario registrado exitosamente");
-        window.location.replace("index.html");
+        window.location = "index.html";
     } catch (error) {
         console.error("Error al registrar:", error);
-        alert("Error al registrar el usuario");
+        document.getElementById("errorMsg").textContent = error.message;
     }
 }
 
@@ -36,4 +42,11 @@ async function loadAvailableNames () {
 
 document.addEventListener("DOMContentLoaded", loadAvailableNames);
 
-document.getElementById("registerForm").addEventListener("submit", handleRegister); 
+document.getElementById("registerForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (document.getElementById("confirmPassword").value !== document.getElementById("password").value) {
+        document.getElementById("errorMsg").textContent = "Las contraseñas no coinciden";   
+    } else {
+        handleRegister()
+    }
+}); 

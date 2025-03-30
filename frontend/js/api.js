@@ -136,10 +136,13 @@ export async function loginUser(nickname, password) {
         });
         const data = await response.json();
 
+        
         if (!response.ok) {
+            document.getElementById("errorMsg").textContent = data.error;
             throw new Error("Error al iniciar sesión");
         }
 
+        window.location = "profile.html";
         return data;
     } catch (error) {
         console.error("Error iniciando sesión:", error);

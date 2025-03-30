@@ -9,11 +9,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     async function updateProfile() {
         const data = await getProfile();
-        if (data) {
-            document.getElementById("userInfo").textContent = `Hola ${data.nickname}, has recolectado ${data.total_cans} latas. (${((data.total_cans * 100) / 60000).toFixed(4)}%)`;
-        } else {
+        
+        if (!data) {
             logOut();
+            return;
         }
+
+        if (data.last === true) {
+            document.getElementById("lastPlace").textContent = "Eres el último en la lista, ¡anímate a recolectar más latas!";
+        }
+        document.getElementById("userInfo").textContent = `Hola ${data.nickname}, has recolectado ${data.total_cans} latas. (${((data.total_cans * 100) / 60000).toFixed(4)}%)`;
     }
 
 
@@ -36,7 +41,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             ranking.forEach((user, index) => {
                 const listItem = document.createElement("li");
+                listItem.classList.add("ranking-item");
                 listItem.textContent = `${index + 1}. ${user.name} (${user.nickname}) - ${user.total_cans} latas`;
+                if (index === 0) {
+                    listItem.textContent = `${index + 1}. ${user.name} (${user.nickname}) - ${user.total_cans} latas 👑`;
+                } else if (index == 1) {
+                    listItem.textContent = `${index + 1}. ${user.name} (${user.nickname}) - ${user.total_cans} latas 🥈`;
+
+                } else if (index == 2) {
+                    listItem.textContent = `${index + 1}. ${user.name} (${user.nickname}) - ${user.total_cans} latas 🥉`;
+                } 
                 rankingContainer.appendChild(listItem);
             });
         } else {
@@ -64,6 +78,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     sum.addEventListener("click", handleAddLata);
+    adder.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            handleAddLata();
+        }
+    });
     logOutButton.addEventListener("click", logOut);
 
     await updateTotal();

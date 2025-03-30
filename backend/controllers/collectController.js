@@ -31,3 +31,4 @@ exports.getTotal = async (req, res) => {
         res.status(500).json({ error: "Error getting total amount of latas" });
     }
 };
+
