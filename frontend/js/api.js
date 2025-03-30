@@ -135,7 +135,7 @@ export async function loginUser(nickname, password) {
             body: JSON.stringify({ nickname, password }),
         });
         const data = await response.json();
-
+        
         
         if (!response.ok) {
             document.getElementById("errorMsg").textContent = data.error;
