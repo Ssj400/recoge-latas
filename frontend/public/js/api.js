@@ -1,4 +1,4 @@
-const API_BASE = "https://recoge-latas.onrender.com/api";
+const API_BASE = "https://recogelatas.onrender.com/api";
 
 export async function getProfile() {
     try {
