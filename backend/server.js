@@ -23,7 +23,7 @@ app.use("/api/logs", logRoutes);
 app.use("/api/monitor", require("./routes/monitorRoutes"));
 
 
-app.listen(3000, () => {
+app.listen(8080, () => {
       console.log(`Server running on port 3000`);
 });
 
