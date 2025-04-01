@@ -24,6 +24,6 @@ app.use("/api/monitor", require("./routes/monitorRoutes"));
 
 
 app.listen(8080, () => {
-      console.log(`Server running on port 3000`);
+      console.log(`Server running on port 8080`);
 });
 
