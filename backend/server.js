@@ -7,6 +7,7 @@ const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const collectRoutes = require("./routes/collectRoutes");
 const logRoutes = require("./routes/logRoutes");
+const monitorRoutes = require("./routes/monitorRoutes");
 
 app.use(cors({
     origin:"https://recoge-latas-uc2v.onrender.com",
@@ -20,7 +21,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/collects", collectRoutes);
 app.use("/api/logs", logRoutes);
-app.use("/api/monitor", require("./routes/monitorRoutes"));
+app.use("/api/monitor", monitorRoutes);
 
 
 app.listen(8080, () => {
