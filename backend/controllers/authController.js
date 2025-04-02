@@ -72,6 +72,7 @@ exports.login = async (req, res) => {
             maxAge: 24 * 60 * 60 * 1000
         });
 
+        client.release();
         console.log("Usuario logueado:", user.rows[0]);
         res.status(200).json({ message: "Usuario logueado exitosamente", user: user.rows[0] });
     } catch (error) {
