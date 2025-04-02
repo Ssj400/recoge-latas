@@ -14,6 +14,20 @@ header {
     justify-content: center;
     gap: 0px;
     height: 60vh;
+    animation: header-blur-scroll 0.3 ease-in-out;
+    animation-timeline: scroll();
+    animation-range: 0 250px;
+}
+
+@keyframes header-blur-scroll {
+  0% {
+    backdrop-filter: blur(0px);
+  } 
+
+  100% {
+    backdrop-filter: blur(10px);
+    background-color: #a3a3a3;
+  }
 }
 
 header h1 {
