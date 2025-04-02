@@ -9,10 +9,16 @@ const collectRoutes = require("./routes/collectRoutes");
 const logRoutes = require("./routes/logRoutes");
 const monitorRoutes = require("./routes/monitorRoutes");
 
-app.use(cors({
-    origin:"https://recoge-latas-uc2v.onrender.com",
-    credentials: true
-}));
+app.use(cors(
+    process.env.NODE_ENV == "production" ?
+    {    
+        origin:"https://recoge-latas-uc2v.onrender.com",
+        credentials: true 
+    } : {
+        origin: "http://localhost:5500",
+        credentials: true,
+    }
+));
 
 app.use(express.json());
 app.use(cookieParser());
