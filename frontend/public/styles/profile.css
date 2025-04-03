@@ -19,13 +19,19 @@ header {
     animation-range: 0 250px;
 }
 
+@media (max-width: 768px) {
+   header {
+    animation-range: 0 500px;
+  }
+}
+
 @keyframes header-blur-scroll {
   0% {
     backdrop-filter: blur(0px);
   } 
 
   100% {
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(15px);
     background-color: #a3a3a3;
   }
 }

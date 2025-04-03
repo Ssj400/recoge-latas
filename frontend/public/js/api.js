@@ -1,4 +1,4 @@
-const API_BASE = "https://recoge-latas-production.up.railway.app/api";
+const API_BASE = "http://localhost:8080/api";
 
 export async function getProfile() {
     try {
