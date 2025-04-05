@@ -107,12 +107,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     await updateProfile();
     await updateRanking(); 
 
+    
+    launchConfetti();
     if (firstPlace) {
-        launchConfetti();
         document.getElementById("placeMsg").textContent = "¡Felicidades, eres el primero en la lista!";
         document.getElementById("placeMsg").style.color = "gold";
     }
 });
+
+window.addEventListener("load", () => {
+    let loader = document.querySelector(".preloader");
+    loader.style.display = "none"
+    document.body.classList.add("loaded");
+})
 
 
 

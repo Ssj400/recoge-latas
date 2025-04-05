@@ -7,24 +7,29 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.0.2"></script>
     <script type="module" src="./js/profile.js"></script>
     <link rel="icon" href="./assets/can.png">
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <title>Recoge latas</title>
 </head>
 <body>
+    <div class="preloader">
+        <div class="spinner"></div>
+    </div>
     <header>
         <h1 class="total">0</h1>
         <h2 class="percent">0%</h2>
     </header>
+    <div class="section-divider"></div>
     <main>
        <input type="number" class="adder" placeholder="Nuevas latas">
        <button class="sum button-25">Agregar</button>
-    </main>
-    <div class="profile">
+       <div class="profile">
         <h1 id="userInfo"></h1>
         <h3 id="placeMsg"></h3>
         <h2>Ranking</h2>
         <ul id="ranking"></ul>
         <button id="logout">Cerrar sesión</button>
     </div>
+    </main>
+    
 </body>
 </html>
