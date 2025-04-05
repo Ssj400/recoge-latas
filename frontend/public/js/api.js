@@ -1,4 +1,4 @@
-const API_BASE = "https://recoge-latas-production.up.railway.app/api";
+const API_BASE = "http://localhost:8080/api";
 
 export async function getProfile() {
     try {
@@ -54,7 +54,7 @@ export async function addLata(amount) {
 
 export async function getRanking() {
     try {
-        const response = await fetch(`${API_BASE}/users/ranking`, {
+       const response = await fetch(`${API_BASE}/users/ranking`, {
             method: "GET",
             credentials: "include",
         });
@@ -80,13 +80,15 @@ export async function logOut() {
         if (!response.ok) {
             throw new Error("Error al cerrar sesión");
         }
-    } catch (error) {
+    } catch (error) { 
         console.error("Error cerrando sesión:", error);
     }
     window.location.href = "index.html";
 }
 
 export async function registerUser(name, nickname, password) {
+    nickname = nickname.trim();
+    password = password.trim();
     try {
         const response = await fetch(`${API_BASE}/auth/register`, {
             method: "POST",
@@ -127,6 +129,8 @@ export async function getAvailableNames() {
 }
 
 export async function loginUser(nickname, password) {
+    nickname = nickname.trim();
+    password = password.trim();
     try {
         const response = await fetch(`${API_BASE}/auth/login`, {
             method: "POST",
