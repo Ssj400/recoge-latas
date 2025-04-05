@@ -113,6 +113,28 @@ header h2 {
     font-size: 300%;
 }
 
+.total.lataAdded {
+  animation: addLataAnimation 1s ease-out;
+}
+
+@keyframes addLataAnimation {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+
 .section-divider {
   height: 5px;
   width: 90%;

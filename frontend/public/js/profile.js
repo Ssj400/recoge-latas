@@ -84,10 +84,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         const result = await addLata(amount);
         if (result) {
             adder.value = "";
-            alert("Latas enviadas");
+            total.classList.add("lataAdded");
             await updateTotal();
             await updateProfile();
             await updateRanking();
+            
+            launchConfetti();
+
+            setTimeout(() => {
+                total.classList.remove("lataAdded");
+            }, 1000);
         } else {
             alert("Error al agregar las latas");
         }
@@ -108,7 +114,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     await updateRanking(); 
 
     
-    launchConfetti();
     if (firstPlace) {
         document.getElementById("placeMsg").textContent = "¡Felicidades, eres el primero en la lista!";
         document.getElementById("placeMsg").style.color = "gold";
