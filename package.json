@@ -2,5 +2,11 @@
   "dependencies": {
     "dotenv": "^16.4.7",
     "eslint": "^9.24.0"
+  },
+  "devDependencies": {
+    "standard": "^17.1.2"
+  },
+  "eslintConfig": {
+    "extends": "standard"    
   }
 }

@@ -8,6 +8,7 @@ const userRoutes = require("./routes/userRoutes");
 const collectRoutes = require("./routes/collectRoutes");
 const logRoutes = require("./routes/logRoutes");
 const monitorRoutes = require("./routes/monitorRoutes");
+const groupRoutes = require("./routes/groupRoutes");
 
 app.use(cors(
     process.env.NODE_ENV == "production" ?
@@ -28,7 +29,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/collects", collectRoutes);
 app.use("/api/logs", logRoutes);
 app.use("/api/monitor", monitorRoutes);
-
+app.use("/api/groups", groupRoutes);
 
 app.listen(8080, () => {
       console.log(`Server running on port 8080`);
