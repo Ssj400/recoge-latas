@@ -306,6 +306,10 @@ p {
   h1 {
     font-size: 150%;
   }
+
+  .slider-item {
+    height: 100%;
+  }
   .card {
     background: transparent;
     border: none;
