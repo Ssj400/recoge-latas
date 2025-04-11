@@ -133,7 +133,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   async function updateGroupRanking() {
     const groupRanking = await getGroupRanking();
-    console.log(groupRanking);
+
     if (groupRanking) {
       const groupRankingContainer = document.getElementById("groupRanking");
       groupRankingContainer.innerHTML = "";
