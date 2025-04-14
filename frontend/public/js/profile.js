@@ -159,15 +159,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     historyContainer.innerHTML = "";
 
     history.forEach((item, index) => {
-      const date = item.timestamp.split("T");
+      const chileTime = new Date(item.timestamp).toLocaleString("es-CL", {
+        timeZone: "America/Santiago",
+      });
       const listItem = document.createElement("li");
       const deleteButton = document.createElement("button");
 
       listItem.classList.add("history-item");
-      listItem.textContent = `${item.action} - ${date[0]} | ${date[1].substring(
-        0,
-        date[1].length - 5
-      )}`;
+      listItem.textContent = `${item.action} - ${chileTime}`;
 
       deleteButton.classList.add("delete-history");
       deleteButton.textContent = "X";

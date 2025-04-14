@@ -12,9 +12,13 @@ exports.addCollect = async (req, res) => {
 
     await client.query("BEGIN");
 
+    const chileDate = new Date(
+      new Date().toLocaleString("en-US", { timeZone: "America/Santiago" })
+    );
+
     const logResult = await client.query(
-      "INSERT INTO logs (user_id, action) VALUES ($1, $2) RETURNING id",
-      [userId, `Sumó ${amount} latas`]
+      "INSERT INTO logs (user_id, action, timestamp) VALUES ($1, $2, $3) RETURNING id",
+      [userId, `Sumó ${amount} latas`, chileDate]
     );
     const logId = logResult.rows[0].id;
 
