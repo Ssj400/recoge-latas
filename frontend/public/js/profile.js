@@ -6,6 +6,8 @@ import {
   logOut,
   getGroup,
   getGroupRanking,
+  getHistory,
+  deleteHistoryItem,
 } from "./api.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -21,7 +23,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const data = await getProfile();
 
     if (!data) {
-      logOut();
       return;
     }
 
@@ -108,6 +109,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       await updateRanking();
       await updateGroup();
       await updateGroupRanking();
+      await updateHistory();
 
       launchConfetti();
 
@@ -151,6 +153,43 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  async function updateHistory() {
+    const history = await getHistory();
+    const historyContainer = document.querySelector(".history");
+    historyContainer.innerHTML = "";
+
+    history.forEach((item, index) => {
+      const date = item.timestamp.split("T");
+      const listItem = document.createElement("li");
+      const deleteButton = document.createElement("button");
+
+      listItem.classList.add("history-item");
+      listItem.textContent = `${item.action} - ${date[0]} | ${date[1].substring(
+        0,
+        date[1].length - 5
+      )}`;
+
+      deleteButton.classList.add("delete-history");
+      deleteButton.textContent = "X";
+      deleteButton.setAttribute("data-id", item.id);
+
+      deleteButton.addEventListener("click", async () => {
+        if (confirm("¿Estás seguro de que quieres eliminar este registro?")) {
+          await deleteHistoryItem(item.id);
+          await updateTotal();
+          await updateProfile();
+          await updateRanking();
+          await updateGroup();
+          await updateGroupRanking();
+          await updateHistory();
+        }
+      });
+      listItem.appendChild(deleteButton);
+
+      historyContainer.appendChild(listItem);
+    });
+  }
+
   sum.addEventListener("click", handleAddLata);
 
   adder.addEventListener("keypress", (e) => {
@@ -169,6 +208,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   await updateRanking();
   await updateGroup();
   await updateGroupRanking();
+  await updateHistory();
 
   if (firstPlace) {
     document.getElementById("placeMsg").textContent =

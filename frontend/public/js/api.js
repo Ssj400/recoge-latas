@@ -188,3 +188,39 @@ export async function getGroupRanking() {
     return null;
   }
 }
+
+export async function getHistory() {
+  try {
+    const response = await fetch(`${API_BASE}/users/history`, {
+      method: "GET",
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al obtener el ranking del grupo");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error obteniendo el ranking del grupo:", error);
+    return null;
+  }
+}
+
+export async function deleteHistoryItem(id) {
+  try {
+    const response = await fetch(`${API_BASE}/users/history/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      alert("Error al eliminar elemento del historial");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error al eliminar elemento del historial:", error);
+    return null;
+  }
+}
