@@ -159,16 +159,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     historyContainer.innerHTML = "";
 
     history.forEach((item, index) => {
-      const chileTime = new Date(item.timestamp).toLocaleString("es-CL", {
-        timeZone: "America/Santiago",
-      });
-
-      console.log(item.timestamp);
+      const date = item.timestamp.split("T");
       const listItem = document.createElement("li");
       const deleteButton = document.createElement("button");
 
       listItem.classList.add("history-item");
-      listItem.textContent = `${item.action} - ${chileTime}`;
+      listItem.textContent = `${item.action} - ${date[0]}`;
 
       deleteButton.classList.add("delete-history");
       deleteButton.textContent = "X";
