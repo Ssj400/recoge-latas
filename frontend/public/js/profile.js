@@ -162,6 +162,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       const chileTime = new Date(item.timestamp).toLocaleString("es-CL", {
         timeZone: "America/Santiago",
       });
+
+      console.log(item.timestamp);
       const listItem = document.createElement("li");
       const deleteButton = document.createElement("button");
 
