@@ -91,3 +91,38 @@ exports.deleteHistoryItem = async (req, res) => {
     res.status(500).json({ error: "Error eliminando elemento" });
   }
 };
+
+exports.getUserStats = async (req, res) => {
+  const client = await pool.connect();
+  try {
+    const userId = req.user.userId;
+
+    const result = await client.query(
+      ` 
+      SELECT
+        dates.date,
+        COALESCE(SUM(c.amount), 0) AS total
+      FROM (
+        SELECT generate_series(
+        (SELECT MIN(date) FROM collects WHERE user_id = $1),
+      CURRENT_DATE,
+        '1 day'
+        )::date AS date
+        ) AS dates
+      LEFT JOIN collects c
+        ON DATE(c.date AT TIME ZONE 'America/Santiago') = dates.date
+        AND c.user_id = $1
+      GROUP BY dates.date
+      ORDER BY dates.date;
+            `,
+      [userId]
+    );
+
+    res.json(result.rows);
+  } catch (error) {
+    console.error("Error on getUserStats", error);
+    res.status(500).json({ error: "Error getting stats" });
+  } finally {
+    client.release();
+  }
+};

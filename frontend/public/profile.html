@@ -8,6 +8,7 @@
     <script type="module" src="./js/profile.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
     <script src="./js/swiper.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="icon" href="./assets/can.png" />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
@@ -64,9 +65,30 @@
               <ul class="history"></ul>
               <button id="logout">Cerrar sesión</button>
             </div>
-        </div>
+            <button class="material-symbols-outlined" id="slide-next">➡</button>
         </div>
 
+        <div class="slider-item swiper-slide">
+          <button class="material-symbols-outlined" id="slide-prev">⬅</button>
+          <div class="card">
+              <h2 class="history-title">Estadísticas</h2>
+              <select id="daysSelect">
+                <option value="7">Últimos 7 días</option>
+                <option value="14">Últimos 14 días</option>
+              <option value="all">Todo</option>
+              </select>
+              <label>
+                <input type="checkbox" id="showGroups">
+                Mostrar grupos
+              </label>
+              <canvas id="userChart" ></canvas>
+              <button id="logout">Cerrar sesión</button>
+          </div>
+        </div>
+
+      </div>
     </div>
+    
+
   </body>
 </html>

@@ -59,13 +59,13 @@ body.loaded {
   }
 }
 
-header, main {
+header, main, .slider-container {
   transform: translateY(30px);
   opacity: 0;
   transition: transform 0.8s ease-in-out, opacity 0.8s ease-in-out;
 }
 
-body.loaded header, body.loaded main {
+body.loaded header, body.loaded main, body.loaded .slider-container{
   transform: translateY(0);
   opacity: 1;
 }
@@ -238,6 +238,7 @@ input.adder::placeholder {
   backdrop-filter: blur(6px);
   border: 1px solid rgba(255, 255, 255, 0.05);
   transition: transform 0.3s ease-in-out;
+  overflow-y: auto;
 }
 
 
@@ -346,9 +347,48 @@ p {
   z-index: 100;
 }
 
+canvas {
+  width: 100% !important;
+  height: auto !important;
+}
+
+#daysSelect {
+  width: fit-content;
+  background-color: transparent;
+  color: #fab700;
+  outline: none;
+  border-radius: 12px;
+  border: 1px solid #fab700;
+  padding: 10px 40px 10px 10px; 
+  font-size: 1.5vh;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23fab700" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 20px;
+  margin-top: 10px;
+}
+
+
+#daysSelect:focus,
+#daysSelect:active {
+  background-color: transparent;
+  color: #fab700;
+  border: 1px solid #fab700;
+}
+
+
+#daysSelect option {
+  background-color: #212121;
+  color: #fab700;
+}
+
+
 @media (max-width: 768px) {
   body {
-      overflow-x: hidden;
+      overflow: auto;
       padding-bottom: 80px;
   }
 
@@ -365,9 +405,17 @@ p {
     box-shadow: none;
     backdrop-filter: none;
     width: 90%;
-    height: 100%;
+    height: 70vh;
     padding-bottom: 60px;
+    overflow-x: scroll;
   }
+
+  canvas {
+    margin-top: auto;
+    height: 50% !important;
+    width: 90% !important;
+  }
+
 
   .button-25, .material-symbols-outlined{
       font-size: 15px;
@@ -395,6 +443,12 @@ p {
     background: transparent;
     border: none;
     width: 100%;
+  }
+
+  .delete-history {
+    width: auto;
+    padding: 6px 10px;
+    font-size: 0.9rem;
   }
 
   .delete-history:hover {

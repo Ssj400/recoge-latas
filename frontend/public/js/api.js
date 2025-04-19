@@ -1,5 +1,5 @@
-const API_BASE = "https://recoge-latas-production.up.railway.app/api";
-//const API_BASE = "http://localhost:8080/api";
+//const API_BASE = "https://recoge-latas-production.up.railway.app/api";
+const API_BASE = "http://localhost:8080/api";
 export async function getProfile() {
   try {
     const response = await fetch(`${API_BASE}/users/profile`, {
@@ -221,6 +221,19 @@ export async function deleteHistoryItem(id) {
     return await response.json();
   } catch (error) {
     console.error("Error al eliminar elemento del historial:", error);
+    return null;
+  }
+}
+
+export async function renderUserChart() {
+  try {
+    const response = await fetch(`${API_BASE}/users/stats`, {
+      credentials: "include",
+    });
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error obteniendo estadísticas");
     return null;
   }
 }

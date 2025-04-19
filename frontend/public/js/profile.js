@@ -8,6 +8,7 @@ import {
   getGroupRanking,
   getHistory,
   deleteHistoryItem,
+  renderUserChart,
 } from "./api.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -18,11 +19,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   let logOutButton = document.querySelectorAll("#logout");
   let nickname = "";
   let firstPlace = false;
+  let userChart;
 
   async function updateProfile() {
     const data = await getProfile();
 
     if (!data) {
+      logOut();
       return;
     }
 
@@ -110,6 +113,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       await updateGroup();
       await updateGroupRanking();
       await updateHistory();
+      await getUserChart();
 
       launchConfetti();
 
@@ -179,12 +183,60 @@ document.addEventListener("DOMContentLoaded", async () => {
           await updateGroup();
           await updateGroupRanking();
           await updateHistory();
+          await getUserChart();
         }
       });
       listItem.appendChild(deleteButton);
 
       historyContainer.appendChild(listItem);
     });
+  }
+
+  async function getUserChart(range = "7") {
+    const data = await renderUserChart();
+    if (!data) return;
+
+    let filteredData = data;
+
+    if (range !== "all") {
+      const amount = Number(range);
+      filteredData = data.slice(-amount);
+    }
+
+    const labels = filteredData.map((entry) => entry.date.split("T")[0]);
+    const values = filteredData.map((entry) => Number(entry.total));
+
+    const ctx = document.getElementById("userChart").getContext("2d");
+
+    if (userChart) {
+      userChart.data.labels = labels;
+      userChart.data.datasets[0].data = values;
+      userChart.update();
+    } else {
+      userChart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: "Latas recolectadas por día",
+              data: values,
+              backgroundColor: "rgba(54, 162, 235, 0.5)",
+              borderColor: "rgba(54, 162, 235, 1)",
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          mantainAspectRatio: true,
+          aspectRatio: 2,
+          responsive: true,
+          scales: {
+            y: { beginAtZero: true },
+          },
+        },
+      });
+    }
   }
 
   sum.addEventListener("click", handleAddLata);
@@ -206,12 +258,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   await updateGroup();
   await updateGroupRanking();
   await updateHistory();
+  await getUserChart();
 
   if (firstPlace) {
     document.getElementById("placeMsg").textContent =
       "¡Felicidades, eres el primero en la lista!";
     document.getElementById("placeMsg").style.color = "gold";
   }
+
+  document
+    .getElementById("daysSelect")
+    .addEventListener("change", async (e) => {
+      await getUserChart(e.target.value);
+    });
 });
 
 window.addEventListener("load", () => {
