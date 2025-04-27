@@ -97,7 +97,6 @@ exports.getUserStats = async (req, res) => {
   try {
     const userId = req.user.userId;
 
-    // 1. Obtener el group_id del usuario
     const groupResult = await client.query(
       `SELECT group_id FROM users WHERE id = $1`,
       [userId]
@@ -108,21 +107,19 @@ exports.getUserStats = async (req, res) => {
       return res.status(404).json({ error: "Grupo no encontrado" });
     }
 
-    // 2. Obtener los usuarios del grupo
     const usersResult = await client.query(
       `SELECT id, name FROM users WHERE group_id = $1`,
       [groupId]
     );
     const users = usersResult.rows;
 
-    // 3. Generar la serie de fechas una vez (desde la fecha más antigua de cualquier recolección del grupo)
     const query = `
       WITH date_series AS (
         SELECT generate_series(
           (SELECT MIN(date) FROM collects WHERE user_id IN (
             SELECT id FROM users WHERE group_id = $1
           )),
-          CURRENT_DATE,
+          CURRENT_DATE+ INTERVAL '1 day',
           '1 day'
         )::date AS date
       ),
