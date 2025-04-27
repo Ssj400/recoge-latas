@@ -1,5 +1,8 @@
-const API_BASE = "https://recoge-latas-production.up.railway.app/api";
-//const API_BASE = "http://localhost:8080/api";
+const isLocalhost = window.location.hostname === "localhost";
+const API_BASE = isLocalhost
+  ? "http://localhost:8080/api"
+  : "https://recoge-latas-production.up.railway.app/api";
+
 export async function getProfile() {
   try {
     const response = await fetch(`${API_BASE}/users/profile`, {
