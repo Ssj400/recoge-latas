@@ -1,6 +1,6 @@
 const swiper = new Swiper(".slider-container", {
   effect: "slide",
-  speed: 1300,
+  speed: 100,
 
   navigation: {
     prevEl: "#slide-prev",

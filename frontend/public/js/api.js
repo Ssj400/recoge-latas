@@ -225,11 +225,15 @@ export async function deleteHistoryItem(id) {
   }
 }
 
-export async function renderUserChart() {
+export async function fetchUserStats() {
   try {
     const response = await fetch(`${API_BASE}/users/stats`, {
       credentials: "include",
     });
+
+    if (!response.ok) {
+      throw new Error("Error al obtener estadísticas");
+    }
 
     return await response.json();
   } catch (error) {

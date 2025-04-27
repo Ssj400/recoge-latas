@@ -8,7 +8,7 @@ import {
   getGroupRanking,
   getHistory,
   deleteHistoryItem,
-  renderUserChart,
+  fetchUserStats,
 } from "./api.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -193,50 +193,123 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function getUserChart(range = "7") {
-    const data = await renderUserChart();
+    const data = await fetchUserStats();
     if (!data) return;
 
-    let filteredData = data;
+    const { groupMembers, stats } = data;
 
-    if (range !== "all") {
-      const amount = Number(range);
-      filteredData = data.slice(-amount);
-    }
+    const uniqueDates = Array.from(
+      new Set(stats.map((entry) => entry.date))
+    ).sort();
 
-    const labels = filteredData.map((entry) => entry.date.split("T")[0]);
-    const values = filteredData.map((entry) => Number(entry.total));
+    const filteredDates =
+      range === "all" ? uniqueDates : uniqueDates.slice(-Number(range));
 
-    const ctx = document.getElementById("userChart").getContext("2d");
+    const userMap = {};
+
+    groupMembers.forEach((user) => {
+      userMap[user.id] = {
+        name: user.name,
+        totals: Array(filteredDates.length).fill(0),
+      };
+    });
+
+    stats.forEach((entry) => {
+      const dateIndex = filteredDates.indexOf(entry.date);
+      if (dateIndex !== -1 && userMap[entry.user_id]) {
+        userMap[entry.user_id].totals[dateIndex] = Number(entry.total);
+      }
+    });
+
+    const labels = filteredDates.map((d) => d.substring(5, 10));
+
+    const datasets = Object.values(userMap).map((user, idx) => {
+      const color = getColor(idx);
+
+      return {
+        label: user.name,
+        data: user.totals,
+        fill: false,
+        borderColor: color,
+        backgroundColor: color + "88",
+        tension: 0.3,
+      };
+    });
+
+    const ctx = document.getElementById("group-chart").getContext("2d");
 
     if (userChart) {
       userChart.data.labels = labels;
-      userChart.data.datasets[0].data = values;
+      userChart.data.datasets = datasets;
       userChart.update();
     } else {
       userChart = new Chart(ctx, {
         type: "line",
         data: {
-          labels: labels,
-          datasets: [
-            {
-              label: "Latas recolectadas por día",
-              data: values,
-              backgroundColor: "rgba(54, 162, 235, 0.5)",
-              borderColor: "rgba(54, 162, 235, 1)",
-              borderWidth: 1,
-            },
-          ],
+          labels,
+          datasets,
         },
         options: {
-          mantainAspectRatio: true,
-          aspectRatio: 2,
           responsive: true,
+          maintainAspectRatio: false,
           scales: {
-            y: { beginAtZero: true },
+            y: {
+              beginAtZero: true,
+            },
+            x: {
+              ticks: {
+                autoSkip: true,
+                maxTicksLimit: 7, // máximo 7 etiquetas visibles
+              },
+            },
+          },
+          plugins: {
+            legend: {
+              display: true,
+              position: "bottom",
+              labels: {
+                boxWidth: 10,
+                font: {
+                  size: 10,
+                },
+                padding: 15,
+              },
+            },
+            tooltip: {
+              mode: "index",
+              intersect: false,
+              bodyFont: {
+                size: 12,
+              },
+              titleFont: {
+                size: 14,
+              },
+            },
+          },
+          interaction: {
+            mode: "nearest",
+            axis: "x",
+            intersect: false,
           },
         },
       });
     }
+  }
+
+  function getColor(index) {
+    const palette = [
+      "#3e95cd",
+      "#8e5ea2",
+      "#3cba9f",
+      "#e8c3b9",
+      "#c45850",
+      "#ff9f40",
+      "#9966ff",
+      "#4bc0c0",
+      "#ff6384",
+      "#36a2eb",
+    ];
+    return palette[index % palette.length];
   }
 
   sum.addEventListener("click", handleAddLata);

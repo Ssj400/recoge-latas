@@ -97,28 +97,65 @@ exports.getUserStats = async (req, res) => {
   try {
     const userId = req.user.userId;
 
-    const result = await client.query(
-      ` 
-      SELECT
-        dates.date,
-        COALESCE(SUM(c.amount), 0) AS total
-      FROM (
-        SELECT generate_series(
-        (SELECT MIN(date) FROM collects WHERE user_id = $1),
-      CURRENT_DATE,
-        '1 day'
-        )::date AS date
-        ) AS dates
-      LEFT JOIN collects c
-        ON DATE(c.date AT TIME ZONE 'America/Santiago') = dates.date
-        AND c.user_id = $1
-      GROUP BY dates.date
-      ORDER BY dates.date;
-            `,
+    // 1. Obtener el group_id del usuario
+    const groupResult = await client.query(
+      `SELECT group_id FROM users WHERE id = $1`,
       [userId]
     );
+    const groupId = groupResult.rows[0]?.group_id;
 
-    res.json(result.rows);
+    if (!groupId) {
+      return res.status(404).json({ error: "Grupo no encontrado" });
+    }
+
+    // 2. Obtener los usuarios del grupo
+    const usersResult = await client.query(
+      `SELECT id, name FROM users WHERE group_id = $1`,
+      [groupId]
+    );
+    const users = usersResult.rows;
+
+    // 3. Generar la serie de fechas una vez (desde la fecha más antigua de cualquier recolección del grupo)
+    const query = `
+      WITH date_series AS (
+        SELECT generate_series(
+          (SELECT MIN(date) FROM collects WHERE user_id IN (
+            SELECT id FROM users WHERE group_id = $1
+          )),
+          CURRENT_DATE,
+          '1 day'
+        )::date AS date
+      ),
+      user_collects AS (
+        SELECT
+          c.user_id,
+          DATE(c.date AT TIME ZONE 'America/Santiago') AS date,
+          SUM(c.amount) AS total
+        FROM collects c
+        JOIN users u ON u.id = c.user_id
+        WHERE u.group_id = $1
+        GROUP BY c.user_id, DATE(c.date AT TIME ZONE 'America/Santiago')
+      )
+      
+      SELECT
+        ds.date,
+        uc.user_id,
+        COALESCE(uc.total, 0) AS total
+      FROM date_series ds
+      CROSS JOIN (
+        SELECT id AS user_id FROM users WHERE group_id = $1
+      ) u
+      LEFT JOIN user_collects uc
+        ON uc.user_id = u.user_id AND uc.date = ds.date
+      ORDER BY ds.date, uc.user_id;
+    `;
+
+    const result = await client.query(query, [groupId]);
+
+    res.json({
+      groupMembers: users,
+      stats: result.rows,
+    });
   } catch (error) {
     console.error("Error on getUserStats", error);
     res.status(500).json({ error: "Error getting stats" });

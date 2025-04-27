@@ -3,6 +3,7 @@ const express = require("express");
 const {
   getGroup,
   getGroupRanking,
+  getGroupStats,
 } = require("../controllers/groupControllers");
 const authMiddleware = require("../middlewares/authMiddleware");
 
