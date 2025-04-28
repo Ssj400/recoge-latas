@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   let nickname = "";
   let firstPlace = false;
   let userChart;
+  let cakeChart;
 
   async function updateProfile() {
     const data = await getProfile();
@@ -259,11 +260,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             x: {
               ticks: {
                 autoSkip: true,
-                maxTicksLimit: 7, // máximo 7 etiquetas visibles
+                maxTicksLimit: 7,
               },
             },
           },
           plugins: {
+            title: {
+              display: true,
+              text: "Inserciones por día de cada integrante del grupo",
+              font: {
+                size: 16,
+              },
+            },
             legend: {
               display: true,
               position: "bottom",
@@ -294,6 +302,79 @@ document.addEventListener("DOMContentLoaded", async () => {
         },
       });
     }
+  }
+
+  async function getGroupCake() {
+    const groupData = await getGroupRanking();
+
+    if (!groupData) return;
+    console.log(groupData);
+    let labels = [];
+    let datasets = [];
+
+    labels = groupData.map((item) => item.name);
+    datasets = [
+      {
+        label: "Total de latas",
+        data: groupData.map((item) => item.total_cans),
+        backgroundColor: [
+          "#3e95cd",
+          "#8e5ea2",
+          "#3cba9f",
+          "#e8c3b9",
+          "#c45850",
+          "#ff9f40",
+          "#9966ff",
+          "#4bc0c0",
+          "#ff6384",
+          "#36a2eb",
+        ],
+        hoverOffset: 4,
+      },
+    ];
+    const ctx = document.getElementById("group-cake").getContext("2d");
+
+    cakeChart = new Chart(ctx, {
+      type: "pie",
+      data: {
+        labels,
+        datasets,
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: "Cantidad total por integrante del grupo",
+            font: {
+              size: 16,
+            },
+          },
+          legend: {
+            display: true,
+            position: "bottom",
+            labels: {
+              boxWidth: 10,
+              font: {
+                size: 12,
+              },
+              padding: 15,
+            },
+          },
+          tooltip: {
+            mode: "index",
+            intersect: false,
+            bodyFont: {
+              size: 12,
+            },
+            titleFont: {
+              size: 14,
+            },
+          },
+        },
+      },
+    });
   }
 
   function getColor(index) {
@@ -332,6 +413,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   await updateGroupRanking();
   await updateHistory();
   await getUserChart();
+  await getGroupCake();
 
   if (firstPlace) {
     document.getElementById("placeMsg").textContent =

@@ -395,6 +395,14 @@ p {
   height: 100%;
 }
 
+.chart-main-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+
+
 @media (max-width: 768px) {
   body {
       overflow: auto;
