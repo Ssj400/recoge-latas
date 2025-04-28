@@ -38,6 +38,31 @@ exports.getRanking = async (req, res) => {
   }
 };
 
+exports.getWeeklyRanking = async (req, res) => {
+  try {
+    const result = await pool.query(`
+         SELECT
+        u.name,
+        u.nickname,
+        COALESCE(SUM(
+          CASE
+            WHEN c.date >= CURRENT_DATE - INTERVAL '7 days' THEN c.amount
+            ELSE 0
+          END
+        ), 0) AS total_cans_last_week
+      FROM users u
+      LEFT JOIN collects c ON u.id = c.user_id
+      GROUP BY u.id
+      ORDER BY total_cans_last_week DESC
+      LIMIT 10
+    `);
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error obteniendo el ranking semanal" });
+  }
+};
+
 exports.getHistory = async (req, res) => {
   try {
     const userId = req.user.userId;

@@ -6,6 +6,8 @@ import {
   logOut,
   getGroup,
   getGroupRanking,
+  getGroupRankingWeekly,
+  getWeeklyRanking,
   getHistory,
   deleteHistoryItem,
   fetchUserStats,
@@ -97,6 +99,43 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  async function updateWeeklyRanking() {
+    const weeklyRanking = await getWeeklyRanking();
+    if (weeklyRanking) {
+      const weeklyRankingContainer = document.getElementById("weeklyRanking");
+      weeklyRankingContainer.innerHTML = "";
+      weeklyRanking.forEach((user, index) => {
+        const listItem = document.createElement("li");
+        listItem.classList.add("ranking-item");
+        listItem.textContent = `${index + 1}. ${user.name} (${
+          user.nickname
+        }) - ${user.total_cans_last_week} latas`;
+        weeklyRankingContainer.appendChild(listItem);
+      });
+    } else {
+      alert("Error al cargar el ranking semanal");
+    }
+  }
+
+  async function updateGroupRankingWeekly() {
+    const groupRankingWeekly = await getGroupRankingWeekly();
+    if (groupRankingWeekly) {
+      const groupRankingWeeklyContainer =
+        document.getElementById("groupRankingWeekly");
+      groupRankingWeeklyContainer.innerHTML = "";
+      groupRankingWeekly.forEach((user, index) => {
+        const listItem = document.createElement("li");
+        listItem.classList.add("ranking-item");
+        listItem.textContent = `${index + 1}. ${user.name} (${
+          user.nickname
+        }) - ${user.total_cans_last_week} latas`;
+        groupRankingWeeklyContainer.appendChild(listItem);
+      });
+    } else {
+      alert("Error al cargar el ranking semanal del grupo");
+    }
+  }
+
   async function handleAddLata() {
     let amount = Number(adder.value).toFixed(0);
     if (!amount || amount <= 0) {
@@ -115,6 +154,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       await updateGroupRanking();
       await updateHistory();
       await getUserChart();
+      await getWeeklyRanking();
+      await updateGroupRankingWeekly();
 
       launchConfetti();
 
@@ -308,7 +349,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const groupData = await getGroupRanking();
 
     if (!groupData) return;
-    console.log(groupData);
+
     let labels = [];
     let datasets = [];
 
@@ -414,6 +455,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   await updateHistory();
   await getUserChart();
   await getGroupCake();
+  await updateWeeklyRanking();
+  await updateGroupRankingWeekly();
 
   if (firstPlace) {
     document.getElementById("placeMsg").textContent =

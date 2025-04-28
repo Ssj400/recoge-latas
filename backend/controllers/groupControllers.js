@@ -67,3 +67,49 @@ exports.getGroupRanking = async (req, res) => {
     res.status(500).json({ error: "Error obteniendo el grupo" });
   }
 };
+
+exports.getGroupRankingWeekly = async (req, res) => {
+  const userId = req.user.userId;
+
+  try {
+    const groupResult = await pool.query(
+      `SELECT group_id FROM users WHERE id = $1`,
+      [userId]
+    );
+
+    if (groupResult.rows.length === 0)
+      return res.status(404).json({ error: "Grupo no encontrado" });
+
+    const groupId = groupResult.rows[0].group_id;
+
+    const result = await pool.query(
+      `
+      SELECT
+        u.name,
+        u.nickname,
+        COALESCE(SUM(
+          CASE
+            WHEN c.date >= CURRENT_DATE - INTERVAL '7 days' THEN c.amount
+            ELSE 0
+          END
+        ), 0) AS total_cans_last_week
+      FROM users u
+      LEFT JOIN collects c ON u.id = c.user_id
+      WHERE u.group_id = $1
+      GROUP BY u.id
+      ORDER BY total_cans_last_week DESC
+      `,
+      [groupId]
+    );
+
+    if (result.rows.length === 0)
+      return res.status(404).json({ error: "No hay usuarios en el grupo" });
+
+    res.json(result.rows);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "Error obteniendo el ranking semanal del grupo" });
+  }
+};

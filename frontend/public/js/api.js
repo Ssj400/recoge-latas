@@ -244,3 +244,38 @@ export async function fetchUserStats() {
     return null;
   }
 }
+
+export async function getWeeklyRanking() {
+  try {
+    const response = await fetch(`${API_BASE}/users/ranking-weekly`, {
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al obtener el ranking semanal");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error obteniendo el ranking semanal");
+    return null;
+  }
+}
+
+export async function getGroupRankingWeekly() {
+  try {
+    const response = await fetch(`${API_BASE}/groups/ranking-weekly`, {
+      method: "GET",
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al obtener el ranking semanal del grupo");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error obteniendo el ranking semanal del grupo:", error);
+    return null;
+  }
+}
