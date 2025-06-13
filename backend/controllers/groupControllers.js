@@ -1,9 +1,19 @@
+// =============================================
+// File: groupControllers.js
+// Description: Handles group-related operations such as fetching group details, ranking, and weekly ranking.
+// Author: José Garrillo
+// Date: 12-06-25
+// Status: Proyect finished, in read-only mode
+// =============================================
+
 const pool = require("../config/db");
 
 exports.getGroup = async (req, res) => {
+  // Get the user ID from the request object
   const userId = req.user.userId;
 
   try {
+    // Query to get the group details for the user
     const result = await pool.query(
       `
             SELECT
@@ -19,6 +29,7 @@ exports.getGroup = async (req, res) => {
       [userId]
     );
 
+    // If no group is found, return a 404 error
     if (result.rows.length === 0)
       return res.status(404).json({ error: "Grupo no encontrado" });
 
@@ -29,10 +40,13 @@ exports.getGroup = async (req, res) => {
   }
 };
 
+// Function to get the ranking of users in a group
 exports.getGroupRanking = async (req, res) => {
+  // Get the user ID from the request object
   const userId = req.user.userId;
 
   try {
+    // Query to get the group ID of the user
     const groupResult = await pool.query(
       `
             SELECT group_id FROM users WHERE id = $1
@@ -40,11 +54,14 @@ exports.getGroupRanking = async (req, res) => {
       [userId]
     );
 
+    // If no group is found, return a 404 error
     if (groupResult.rows.length === 0)
       return res.status(404).json({ error: "Grupo no encontrado" });
 
+    // Get the group ID from the result
     const groupId = groupResult.rows[0].group_id;
 
+    // Query to get the ranking of users in the group
     const result = await pool.query(
       `
             SELECT
@@ -58,6 +75,7 @@ exports.getGroupRanking = async (req, res) => {
       [groupId]
     );
 
+    // If no users are found in the group, return a 404 error
     if (result.rows.length === 0)
       return res.status(404).json({ error: "Grupo no encontrado" });
 
@@ -68,20 +86,26 @@ exports.getGroupRanking = async (req, res) => {
   }
 };
 
+// Function to get the weekly ranking of users in a group
 exports.getGroupRankingWeekly = async (req, res) => {
+  // Get the user ID from the request object
   const userId = req.user.userId;
 
   try {
+    // Query to get the group ID of the user
     const groupResult = await pool.query(
       `SELECT group_id FROM users WHERE id = $1`,
       [userId]
     );
 
+    // If no group is found, return a 404 error
     if (groupResult.rows.length === 0)
       return res.status(404).json({ error: "Grupo no encontrado" });
 
+    // Get the group ID from the result
     const groupId = groupResult.rows[0].group_id;
 
+    // Query to get the weekly ranking of users in the group
     const result = await pool.query(
       `
       SELECT
@@ -102,6 +126,7 @@ exports.getGroupRankingWeekly = async (req, res) => {
       [groupId]
     );
 
+    // If no users are found in the group, return a 404 error
     if (result.rows.length === 0)
       return res.status(404).json({ error: "No hay usuarios en el grupo" });
 

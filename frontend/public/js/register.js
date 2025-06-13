@@ -1,10 +1,20 @@
+// =============================================
+// File: register.js
+// Description: Registration functionality for the frontend.
+// Author: José Garrillo
+// Date: 12-06-25
+// Status: Proyect finished, in read-only mode
+// =============================================
 import { registerUser, getAvailableNames } from "./api.js";
 
+// Function to handle the registration process
 async function handleRegister() {
+  // Get the values from the input fields
   const name = document.getElementById("name").value;
   const nickname = document.getElementById("nickname").value;
   const password = document.getElementById("password").value;
 
+  // Validate the input fields
   if (!name || !nickname || !password) {
     document.getElementById("errorMsg").textContent =
       "Por favor complete todos los campos";
@@ -14,6 +24,7 @@ async function handleRegister() {
       "La contraseña debe tener al menos 6 caracteres";
     return;
   }
+  // Attempt to register the user
   try {
     await registerUser(name, nickname, password);
     alert("Usuario registrado exitosamente");
@@ -24,11 +35,14 @@ async function handleRegister() {
   }
 }
 
+// Function to load available names into the select dropdown
 async function loadAvailableNames() {
   try {
+    // Fetch the available names from the API
     const names = await getAvailableNames();
     const select = document.querySelector("select");
 
+    // Iterate over the names and create option elements
     names.forEach((name) => {
       const option = document.createElement("option");
       option.value = name;
@@ -41,8 +55,10 @@ async function loadAvailableNames() {
   }
 }
 
+// Add an event listener to load available names when the document is ready
 document.addEventListener("DOMContentLoaded", loadAvailableNames);
 
+// Add an event listener to the registration form to handle submission
 document.getElementById("registerForm").addEventListener("submit", (e) => {
   e.preventDefault();
   if (

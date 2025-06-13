@@ -1,3 +1,11 @@
+// =============================================
+// File: userRoutes.js
+// Description: Handles user-related routes for profile, ranking, history, and statistics.
+// Author: José Garrillo
+// Date: 12-06-25
+// Status: Proyect finished, in read-only mode
+// =============================================
+
 const express = require("express");
 const {
   getProfile,

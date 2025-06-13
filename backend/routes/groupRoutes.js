@@ -1,3 +1,11 @@
+// =============================================
+// File: groupRoutes.js
+// Description: Handles routes for group-related operations such as retrieving group information and rankings.
+// Author: José Garrillo
+// Date: 12-06-25
+// Status: Proyect finished, in read-only mode
+// =============================================
+
 const express = require("express");
 
 const {
