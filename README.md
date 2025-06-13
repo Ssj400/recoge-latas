@@ -170,3 +170,7 @@ El proyecto puede desplegarse en plataformas como Vercel (frontend) y Render o R
 - ✅ Proyecto terminado
 - 🔒 Modo solo lectura
 - 🌱 Apto para ser desplegado o integrado en una campaña escolar real.
+
+## 📄 Licencia
+
+Este proyecto está bajo la licencia [MIT](./LICENSE).
