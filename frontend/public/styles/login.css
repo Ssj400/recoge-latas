@@ -31,38 +31,6 @@ body {
     height: 90vh;
 }
 
-.typewriter {
-    display: flex;
-    justify-content: center;
-}
-
-.typewriter p {
-    font-family: monospace;
-    font-size: 4rem;
-    margin-inline: auto;
-    overflow: hidden;
-    white-space: nowrap;
-    border-right: 1px solid white;
-    animation: typing 3s steps(22) forwards,
-        blink 1s step-end infinite;
-    color: white;
-}
-
-@keyframes typing {
-    from {
-        width: 0;
-    }
-
-    to {
-        width: 100%;
-    }
-}
-
-@keyframes blink {
-    50% {
-        border-color: transparent;
-    }
-}
 
 
 h1, h2, h3 {
