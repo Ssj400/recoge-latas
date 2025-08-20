@@ -8,7 +8,6 @@
 
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
-const cookieParser = require("cookie-parser");
 
 // Middleware to check if the user is authenticated.
 // It checks for a JWT token in the cookies and verifies it.
