@@ -296,7 +296,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Sort the stats by date
     const uniqueDates = Array.from(
-      new Set(stats.map((entry) => entry.date))
+      new Set(stats.map((entry) => entry.date)),
     ).sort();
 
     //Filter the dates based on the selected range
@@ -548,6 +548,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 // Add an event listener for the window load event to hide the preloader
 window.addEventListener("load", () => {
   let loader = document.querySelector(".preloader");
-  loader.style.display = "none";
+  if (loader) {
+    try {
+      loader.style.display = "none";
+    } catch (e) {
+      // ignore style errors
+    }
+  }
   document.body.classList.add("loaded");
 });
