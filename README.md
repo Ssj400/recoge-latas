@@ -1,176 +1,142 @@
-# 🥫RecogeLatas
+# RecogeLatas
 
-**RecogeLatas** es una aplicación web que permite a los estudiantes registrar, visualizar y organizar la recolección de latas en una campaña escolar del 4C generación 2025. En la aplicación en cuestión, cada estudiante tiene su propio perfil, donde registra la cantidad de latas que va recolectando, obteniendo estadísticas suyas y del grupo al que pertenece, además de un posicionamiento automático en el ranking del curso, en función de las latas que vaya recolectando.
+RecogeLatas is a web application designed to help students register, track and organize aluminum can collections as part of a school campaign. Each student has a personal profile where they record collected cans, view personal and group statistics, and are ranked automatically within their course based on collected cans.
 
-## 📁 Estructura del proyecto
+## Project structure
 
-```plaintext
+```
+recoge-latas/
 ├── backend/
 │   ├── controllers/
-│   │   └── authController.js
-│   │   └── collectController.js
-│   │   └── groupController.js
-│   │   └── logController.js
-│   │   └── monitorController.js
-│   │   └── userController.js
 │   ├── routes/
-│   │   └── authRoutes.js
-│   │   └── collectRoutes.js
-│   │   └── groupRoutes.js
-│   │   └── logRoutes.js
-│   │   └── monitorRoutes.js
-│   │   └── userRoutes.js
 │   ├── config/
-│   │   └── db.js
 │   └── server.js
 ├── frontend/
-│   ├── index.html
-│   ├── register.html
-│   ├── profile.html
-│   ├── styles/
-│   │   └── login.css
-│   │   └── profile.css
-│   ├── js/
-│   │   └── api.js
-│   │   └── login.js
-│   │   └── profile.js
-│   │   └── register.js
-│   │   └── swiper.js
+│   ├── public/
+│   │   ├── index.html
+│   │   ├── register.html
+│   │   ├── profile.html
+│   │   ├── assets/
+│   │   ├── js/
+│   │   └── styles/
 └── README.md
 ```
-## 🚀 Funcionalidades principales
 
-- Registro de usuarios a partir de un listado preexistente en la base de datos (con asignación de nickname y contraseña).
-- Inicio y cierre de sesión con cookies y JWT.
-- Visualización del perfil del usuario y su progreso.
-- Muestra del total de latas recolectadas por todos los participantes.
-- Interfaz clara y amigable para usuarios jóvenes.
-- Ranking de grupo y general, para fomentar la recolección a partir de la competitividad.
-- Estadísticas del usuario en comparación a su grupo con gráficos integrados.
+Note: The tree above is a concise overview; the repository also contains supporting files such as configuration, package manifests and static assets.
 
-## 🛠️ Tecnologías utilizadas
+## Key features
+
+- User registration (from a predefined list in the database) with nickname and password assignment
+- Authentication with JWT and cookie support
+- Personal profile view showing progress and personal statistics
+- Global and group-level totals of collected cans
+- Leaderboards (group and overall) to encourage participation through friendly competition
+- Integrated charts to compare a user’s performance against their group
+- Simple, youth-friendly UI
+
+## Technologies
+
 ### Backend
 - Node.js
 - Express
 - PostgreSQL
-- JWT (jsonwebtoken)
-- Bcrypt.js
+- jsonwebtoken (JWT)
+- bcrypt.js
 - dotenv
+
 ### Frontend
-- HTML
-- CSS
-- JavaScript (vanilla)
-### Herramientas adicionales
+- HTML, CSS
+- Vanilla JavaScript
+- Swiper.js (for interactive sliders)
 
-- pg-promise o pg: Conector para PostgreSQL
-- CORS: Middleware para manejo de CORS
-- cookie-parser: Manejo de cookies
-- Swiper.js: Para sliders en el frontend
+### Other dependencies / middleware
+- pg or pg-promise (PostgreSQL client)
+- cors
+- cookie-parser
 
-## 🧩 Instalación y Uso
-Sigue estos pasos para ejecutar el proyecto de manera local:
-### 1. Clona el repositorio
+## Installation and local setup
+
+1. Clone the repository
 
 ```bash
-git clone https://github.com/tuusuario/tu-repo.git
+git clone https://github.com/your-username/recoge-latas.git
+cd recoge-latas
 ```
-### 2. Instala las dependencias del backend
+
+2. Install backend dependencies
+
 ```bash
 cd backend
 npm install
 ```
-### 3. Configura las variables de entorno
-Crea un archivo .env dentro de la carpeta backend/ con el siguiente contenido
+
+3. Create environment variables
+
+Create a `.env` file inside `backend/` with at least the following entries:
+
 ```env
-DATABASE_URL=postgresql://usuario:contraseña@localhost:5432/nombre_de_tu_base_de_datos
-JWT_SECRET=una_clave_secreta_para_los_tokens
+DATABASE_URL=postgresql://user:password@localhost:5432/database_name
+JWT_SECRET=your_jwt_secret
 NODE_ENV=development
 ```
-### 4. Ejecuta el servidor backend
+
+4. Start the backend server
+
 ```bash
 node server.js
 ```
-### 5. Abre el frontend
-Navega a la carpeta frontend/ y abre el archivo `index.html` con tu navegador.
-> Asegúrate de tener tu base de datos PostgreSQL en ejecución antes de iniciar el servidor.
-## 🗄️ Estructura de la Base de Datos
 
-Este proyecto utiliza PostgreSQL como sistema de gestión de base de datos. A continuación se describe la estructura de las tablas utilizadas:
+5. Open the frontend
 
-### Tabla `users`
+Open `frontend/public/index.html` in your browser (or serve the `public/` folder with a static server).
 
-| Columna     | Tipo    | Restricciones                              |
-|-------------|---------|--------------------------------------------|
-| id          | integer | PRIMARY KEY, NOT NULL                      |
-| name        | text    | NOT NULL                                   |
-| nickname    | text    | ÚNICO (UNIQUE), puede ser NULL             |
-| password    | text    | Puede ser NULL                             |
-| total_cans  | integer | DEFAULT 0                                  |
-| group_id    | integer | FOREIGN KEY → groups(id), puede ser NULL   |
+Note: Ensure PostgreSQL is running and the database is created and accessible before starting the backend.
 
-**Relaciones**:
-- Un usuario puede pertenecer a un grupo (`group_id`).
-- Un usuario puede tener muchas entradas en `collects` y `logs`.
+## Database schema (summary)
 
----
+The application uses PostgreSQL. Below is a simplified summary of the main tables and relationships. Implement migrations or create tables manually before running the server.
 
-### Tabla `groups`
+Users
+- id: integer (PK)
+- name: text (not null)
+- nickname: text (unique, nullable)
+- password: text (nullable)
+- total_cans: integer (default 0)
+- group_id: integer (FK → groups.id, nullable)
 
-| Columna     | Tipo    | Restricciones             |
-|-------------|---------|---------------------------|
-| id          | integer | PRIMARY KEY, NOT NULL     |
-| name        | text    | NOT NULL                  |
-| description | text    | Puede ser NULL            |
+Groups
+- id: integer (PK)
+- name: text (not null)
+- description: text (nullable)
 
-**Relaciones**:
-- Un grupo puede tener muchos usuarios.
+Collects
+- id: integer (PK)
+- user_id: integer (FK → users.id, nullable)
+- amount: integer (not null)
+- date: timestamp (default current_timestamp)
+- log_id: integer (FK → logs.id, nullable, ON DELETE CASCADE)
 
----
+Logs
+- id: integer (PK)
+- user_id: integer (FK → users.id, nullable, ON DELETE CASCADE)
+- action: text (not null)
+- timestamp: timestamp (default current_timestamp)
 
-### Tabla `collects`
+Ensure the appropriate foreign keys and indexes are created according to your preferred migration strategy.
 
-| Columna  | Tipo      | Restricciones                                          |
-|----------|-----------|--------------------------------------------------------|
-| id       | integer   | PRIMARY KEY, NOT NULL                                  |
-| user_id  | integer   | FOREIGN KEY → users(id), puede ser NULL                |
-| amount   | integer   | NOT NULL                                               |
-| date     | timestamp | DEFAULT CURRENT_TIMESTAMP                              |
-| log_id   | integer   | FOREIGN KEY → logs(id), puede ser NULL, ON DELETE CASCADE |
+## Deployment
 
-**Relaciones**:
-- Cada recolección pertenece a un usuario.
-- Puede estar vinculada a un log.
+The frontend can be deployed as static assets (Vercel, Netlify, etc.). The backend is suitable for deployment on Render, Railway, Heroku, or similar services. Configure environment variables and the database connection for your chosen platform.
 
----
 
-### Tabla `logs`
+## Author
 
-| Columna   | Tipo      | Restricciones                                       |
-|-----------|-----------|-----------------------------------------------------|
-| id        | integer   | PRIMARY KEY, NOT NULL                               |
-| user_id   | integer   | FOREIGN KEY → users(id), puede ser NULL, ON DELETE CASCADE |
-| action    | text      | NOT NULL                                            |
-| timestamp | timestamp | DEFAULT CURRENT_TIMESTAMP                           |
+José Garrillo (Ssj400)
 
-**Relaciones**:
-- Un log pertenece a un usuario.
-- Un log puede estar vinculado a múltiples entradas en `collects`.
+## Project status
 
----
+- Status: Completed (archive / read-only mode)
 
-> ⚠️ Recuerda ejecutar las migraciones o crear estas tablas manualmente antes de iniciar el backend.
-## 🌐 Despliegue (opcional)
+## License
 
-El proyecto puede desplegarse en plataformas como Vercel (frontend) y Render o Railway (backend). Asegúrate de configurar correctamente las variables de entorno.
-
-## ✍️ Autor
-**José Garrillo** - Ssj400 
-
-## 📌 Estado del proyecto
-- ✅ Proyecto terminado
-- 🔒 Modo solo lectura
-- 🌱 Apto para ser desplegado o integrado en una campaña escolar real.
-
-## 📄 Licencia
-
-Este proyecto está bajo la licencia [MIT](./LICENSE).
+This project is licensed under the [MIT License](./LICENSE).
